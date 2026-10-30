@@ -1,5 +1,5 @@
 // Network-first with cache fallback: always fresh when online, still playable offline.
-const CACHE = 'cube-v13';
+const CACHE = 'cube-v14';
 const ASSETS = ['./', 'index.html', 'style.css', 'game.js', 'themes.css', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-180.png', 'icon-32.png', 'og-image.png'];
 
 self.addEventListener('install', (e) => {
