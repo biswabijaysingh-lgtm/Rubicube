@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#F4EFE6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Cube — Rubik's Cube Game</title>
+<script>try{var th=new URLSearchParams(location.search).get("theme");if(th)localStorage.setItem("cube.theme",th);th=localStorage.getItem("cube.theme");if(th)document.documentElement.dataset.theme=th;var b=new URLSearchParams(location.search).get("bg");if(b)localStorage.setItem("cube.bg",b);b=localStorage.getItem("cube.bg");if(b)document.documentElement.dataset.bg=b}catch(e){}</script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="description" content="Play a 3D Rubik's cube in your browser — 2×2 to 5×5, 10 visual styles, a solver, patterns and sound. Works on PC and mobile.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-title" content="Cube">
+<!-- Link preview (WhatsApp, Instagram, X, Facebook...). After you know your live address, change the
+     two image URLs below to the full address, e.g. https://your-site.netlify.app/og-image.png -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cube — a 3D Rubik's cube game">
+<meta property="og:description" content="10 visual styles, 2×2 to 5×5, solver and patterns. Play on PC or mobile.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cube — a 3D Rubik's cube game">
+<meta name="twitter:description" content="10 visual styles, 2×2 to 5×5, solver and patterns. Play on PC or mobile.">
+<meta name="twitter:image" content="og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="themes.css">
+</head>
+<body>
+
+<div id="barbg"></div>
+
+<main id="stage" aria-label="Rubik's cube. Drag a sticker to turn a layer, drag the background to rotate the view.">
+  <div id="shadow"></div>
+  <div id="world"></div>
+</main>
+
+<header class="top" id="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i><i style="background:var(--blue)"></i><i style="background:var(--white)"></i></span>
+    <span class="brand-name">Cube.</span>
+  </div>
+  <div class="chip"><span class="dot" id="chip-dot"></span><span id="chip-text">Solved</span></div>
+  <button id="btn-style" class="round wide" aria-label="Change style">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.8 2-1.7 0-1.3-1-1.6-1-2.8 0-1 .8-1.5 1.8-1.5H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/>
+      <circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10.5" cy="7" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/>
+    </svg><span class="lbl">Style</span>
+  </button>
+  <button id="btn-sound" class="round" aria-label="Sound on" aria-pressed="true">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z" fill="currentColor"/>
+      <path class="waves" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/>
+      <path class="slash" d="M16 9.5l5 5M21 9.5l-5 5"/>
+    </svg>
+  </button>
+  <button id="btn-full" class="round" aria-label="Fullscreen">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+    </svg>
+  </button>
+  <button id="btn-help" class="round" aria-label="Info">i</button>
+</header>
+
+<!-- compact stats for phones -->
+<section class="mhud" id="mhud" aria-label="Stats">
+  <div class="mstat"><b class="js-time">0:00.0</b><span>Time</span></div>
+  <div class="mstat"><b class="js-moves">0</b><span>Moves</span></div>
+  <div class="mstat"><b class="js-best">—</b><span>Best</span></div>
+</section>
+
+<!-- all cards live in one aligned panel: right side on desktop/landscape, bottom on portrait phones -->
+<aside class="panel" id="dock" data-view="main" aria-label="Game panel">
+  <div class="stats">
+    <section class="card white">
+      <div class="stat"><b class="num js-time">0:00.0</b><span>time</span></div>
+      <div class="stat"><b class="num js-moves">0</b><span>moves</span></div>
+    </section>
+    <section class="card yellow">
+      <div class="stat"><b class="num js-best">—</b><span>best time</span></div>
+      <div class="stat"><b class="num js-size">3×3</b><span>cube size</span></div>
+    </section>
+  </div>
+
+  <section class="card black puzzle main">
+    <p class="eyebrow">The puzzle</p>
+    <h2 id="state">Solved</h2>
+    <p class="detail" id="detail">3×3 cube</p>
+    <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
+    <button id="btn-scramble" class="scramble">Scramble it ↻</button>
+    <p class="helper">drag a sticker to turn · drag outside to spin</p>
+  </section>
+
+  <section class="card blue options main">
+    <p class="eyebrow">Options</p>
+    <div class="seg" id="sizes" role="group" aria-label="Cube size">
+      <button data-n="2">2×2</button>
+      <button data-n="3" class="on">3×3</button>
+      <button data-n="4">4×4</button>
+      <button data-n="5">5×5</button>
+    </div>
+    <label class="speed">
+      <span>Speed</span>
+      <input type="range" id="speed" min="0" max="100" value="55" aria-label="Animation speed">
+      <output id="speed-label">Fast</output>
+    </label>
+    <div class="minis">
+      <button id="btn-undo" class="mini" aria-label="Undo">↶ Undo</button>
+      <button id="btn-redo" class="mini" aria-label="Redo">Redo ↷</button>
+      <button id="btn-reset" class="mini">Reset</button>
+    </div>
+  </section>
+
+  <section class="card green tools main">
+    <p class="eyebrow">Tools</p>
+    <div class="minis">
+      <button class="mini" data-open="solver">Solver</button>
+      <button class="mini" data-open="patterns">Patterns</button>
+      <button class="mini" data-open="moves">Moves</button>
+      <button class="mini accent" id="btn-style2">Style</button>
+    </div>
+  </section>
+
+  <!-- tool views: replace the cards above while open -->
+  <section class="card white tool tool-solver">
+    <header class="tool-head"><h3>Solver</h3><button class="round sm" data-close aria-label="Back to the game">✕</button></header>
+    <p class="tool-info" id="solver-info">Nothing to solve.</p>
+    <div class="mvs" id="solver-chips"></div>
+    <div class="tool-actions">
+      <button id="btn-solve-all" class="btn dark sm">Solve ▶</button>
+      <button id="btn-step" class="btn light sm">Step ▶</button>
+    </div>
+    <p class="tool-note">Plays your moves back in reverse, shortened where moves cancel out.</p>
+  </section>
+
+  <section class="card white tool tool-patterns">
+    <header class="tool-head"><h3>Patterns</h3><button class="round sm" data-close aria-label="Back to the game">✕</button></header>
+    <div class="pat-list" id="pattern-list"></div>
+    <p class="tool-note" id="pattern-note"></p>
+  </section>
+
+  <section class="card white tool tool-moves">
+    <header class="tool-head"><h3>Moves</h3><button class="round sm" data-close aria-label="Back to the game">✕</button></header>
+    <div class="movegrid" id="movegrid"></div>
+    <form id="moveform" class="moveform">
+      <input id="moveinput" type="text" placeholder="R U R' U'" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Move sequence">
+      <button class="btn dark sm" type="submit">Apply</button>
+    </form>
+    <p class="tool-note" id="move-note"></p>
+  </section>
+</aside>
+
+<p id="toast" role="status" aria-live="polite"></p>
+
+<section id="win" class="overlay" hidden>
+  <div class="sheet">
+    <h2>Solved!</h2>
+    <p class="big" id="win-time">0:00.0</p>
+    <p id="win-info"></p>
+    <button id="win-again" class="btn dark">Play again</button>
+  </div>
+</section>
+
+<section id="styles" class="overlay" hidden>
+  <div class="sheet wide">
+    <h2>Style</h2>
+    <p>Pick a material. The cube, background and every card change together.</p>
+    <div class="theme-grid" id="theme-grid"></div>
+    <button id="styles-close" class="btn dark">Done</button>
+  </div>
+</section>
+
+<section id="help" class="overlay" hidden>
+  <div class="sheet">
+    <h2>Info</h2>
+    <ul>
+      <li><b>Turn a layer</b> — drag a sticker along the direction you want it to move.</li>
+      <li><b>Rotate the view</b> — drag the empty background. <b>Zoom</b> with a pinch or the mouse wheel.</li>
+      <li><b>Scramble it</b> mixes the cube; the timer starts on your first move.</li>
+      <li><b>Undo / Redo</b> step back and forward through every move. <b>Speed</b> changes how fast the cube turns.</li>
+      <li><b>Solver</b> shows the moves that solve the cube. Play them all, or step through one at a time.</li>
+      <li><b>Patterns</b> builds a famous pattern on the 3×3. <b>Moves</b> turns the cube with buttons or typed notation like <i>R U R' U'</i>.</li>
+      <li><b>Notation</b> — a letter is a clockwise quarter turn of that face (R, L, U, D, F, B), <i>'</i> is counter-clockwise, <i>2</i> is a half turn. M, E, S are the middle slices.</li>
+      <li><b>Sound</b> — clicks on every turn and a chime when you win. Use the speaker button to mute.</li>
+      <li class="kbd"><b>Keyboard</b> — <kbd>R</kbd> <kbd>L</kbd> <kbd>U</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>B</kbd> turn a face (<kbd>Shift</kbd> = counter-clockwise), <kbd>Space</kbd> scramble, <kbd>Z</kbd> undo, <kbd>Y</kbd> redo, arrows rotate the view.</li>
+    </ul>
+    <button id="help-close" class="btn dark">Got it</button>
+  </div>
+</section>
+
+<script src="game.js"></script>
+</body>
+</html>

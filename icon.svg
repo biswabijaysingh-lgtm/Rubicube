@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2142"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <g id="grid">
+      <rect x=".025" y=".025" width=".3" height=".3" rx=".04"/>
+      <rect x=".35" y=".025" width=".3" height=".3" rx=".04"/>
+      <rect x=".675" y=".025" width=".3" height=".3" rx=".04"/>
+      <rect x=".025" y=".35" width=".3" height=".3" rx=".04"/>
+      <rect x=".35" y=".35" width=".3" height=".3" rx=".04"/>
+      <rect x=".675" y=".35" width=".3" height=".3" rx=".04"/>
+      <rect x=".025" y=".675" width=".3" height=".3" rx=".04"/>
+      <rect x=".35" y=".675" width=".3" height=".3" rx=".04"/>
+      <rect x=".675" y=".675" width=".3" height=".3" rx=".04"/>
+    </g>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <polygon points="256,70 417,163 417,349 256,442 95,349 95,163" fill="#0c0d12"/>
+  <use href="#grid" fill="#f4f4ef" transform="matrix(161 -93 161 93 95 163)"/>
+  <use href="#grid" fill="#2bb673" transform="matrix(161 93 0 186 95 163)"/>
+  <use href="#grid" fill="#e5383b" transform="matrix(161 -93 0 186 256 256)"/>
+</svg>

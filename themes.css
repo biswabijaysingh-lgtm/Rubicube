@@ -1,0 +1,283 @@
+/* ======================================================================
+   Themes. style.css is the "Sticker" (classic) look; each block below re-skins
+   the cube, the background and every card through the theme tokens in :root.
+   Pick one with the palette button, or ?theme=glass|neon|plasma|halftone|clay|fur|metal|jelly|pixel
+   ====================================================================== */
+
+/* ---------- style picker ---------- */
+.sheet.wide { width: min(640px, 100%); }
+.sheet p { margin-top: 8px; }
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 18px 0 22px; }
+.theme-tile {
+  padding: 10px; text-align: left; background: var(--surface-2);
+  border: 2px solid var(--ink); border-radius: 16px; box-shadow: 3px 3px 0 var(--ink);
+  transition: transform .12s, box-shadow .12s;
+}
+.theme-tile i { display: block; height: 52px; margin-bottom: 8px; border-radius: 10px; border: 2px solid var(--ink); }
+.theme-tile b { display: block; font-size: 14px; }
+.theme-tile span { display: block; font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
+.theme-tile:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+.theme-tile.on { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* helpers shared by the soft (non-hard-shadow) themes */
+@keyframes plasmaBg { 50% { background-position: 100% 60%; } }
+@property --pa { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes plasmaSpin { to { --pa: 360deg; } }
+
+/* ======================================================================
+   GLASS — frosted, translucent, bluish
+   ====================================================================== */
+html[data-theme="glass"] {
+  color-scheme: dark;
+  --bg: #0d1b3a; --chrome: rgba(255,255,255,.07); --ink: #eaf4ff; --ink-soft: #a9bde0; --on-ink: #0d1b3a;
+  --surface: rgba(255,255,255,.14); --surface-2: rgba(255,255,255,.16); --body: rgba(190,225,255,.10);
+  --c-white: rgba(255,255,255,.13); --c-yellow: rgba(255,214,90,.26); --c-black: rgba(8,16,44,.55);
+  --c-blue: rgba(80,140,255,.34); --c-green: rgba(60,220,160,.28); --on-black: #eaf4ff; --on-blue: #fff; --on-green: #fff;
+  --accent: #8fd0ff; --on-accent: #07142e;
+  --card-r: 26px; --card-bw: 1px; --card-shadow: 0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  --face-r: 14%; --st-r: 22%; --st-in: 9%;
+}
+html[data-theme="glass"], html[data-theme="glass"] body {
+  background: radial-gradient(55% 45% at 20% 18%, rgba(70,120,255,.55), transparent 62%),
+              radial-gradient(50% 45% at 82% 72%, rgba(0,229,196,.38), transparent 62%), #0d1b3a;
+}
+html[data-theme="glass"] .face { border: 1px solid rgba(255,255,255,.38); }
+html[data-theme="glass"] .sticker {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c) 55%, white) 0%, color-mix(in srgb, var(--c) 55%, transparent) 55%, color-mix(in srgb, var(--c) 82%, transparent) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.55), inset 0 8px 14px rgba(255,255,255,.35), 0 0 12px color-mix(in srgb, var(--c) 45%, transparent);
+}
+html[data-theme="glass"] :is(.card, .panel, #barbg, .sheet, .mstat) { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+html[data-theme="glass"] :is(.card, .mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg) { border-color: rgba(255,255,255,.35) !important; }
+html[data-theme="glass"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light) { box-shadow: 0 4px 14px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.35) !important; }
+html[data-theme="glass"] #shadow { background: radial-gradient(closest-side, rgba(120,190,255,.35), transparent); }
+
+/* ======================================================================
+   NEON GLOW — dark, every sticker lit from within
+   ====================================================================== */
+html[data-theme="neon"] {
+  color-scheme: dark;
+  --bg: #05060f; --chrome: #090b1b; --ink: #e8f6ff; --ink-soft: #8aa4c8; --on-ink: #05060f;
+  --surface: #0d1024; --surface-2: #11163a; --body: #070816;
+  --c-white: #0b0e22; --c-yellow: #14110a; --c-black: #0b0816; --c-blue: #0b0e22; --c-green: #08140f;
+  --on-black: #e8f6ff; --on-blue: #e8f6ff; --on-green: #e8f6ff; --accent: #00f0ff; --on-accent: #02121a;
+  --serif: var(--sans); --dw: 800;
+  --card-r: 14px; --card-bw: 1px; --card-shadow: 0 0 0 1px var(--neon, #00f0ff), 0 0 20px color-mix(in srgb, var(--neon, #00f0ff) 55%, transparent);
+  --face-r: 8%; --st-r: 12%; --st-in: 9%;
+}
+html[data-theme="neon"], html[data-theme="neon"] body {
+  background: linear-gradient(rgba(0,240,255,.06) 1px, transparent 1px) 0 0 / 42px 42px,
+              linear-gradient(90deg, rgba(0,240,255,.06) 1px, transparent 1px) 0 0 / 42px 42px,
+              radial-gradient(circle at 50% 42%, #151a44, #05060f 70%);
+}
+html[data-theme="neon"] .card { border-color: var(--neon, #00f0ff); }
+html[data-theme="neon"] .card.white { --neon: #00f0ff; } html[data-theme="neon"] .card.yellow { --neon: #ffe600; }
+html[data-theme="neon"] .card.black { --neon: #ff2bd6; } html[data-theme="neon"] .card.blue { --neon: #7a6bff; }
+html[data-theme="neon"] .card.green { --neon: #39ff88; }
+html[data-theme="neon"] .face { box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+html[data-theme="neon"] .sticker {
+  background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--c) 45%, white) 0, var(--c) 52%, color-mix(in srgb, var(--c) 70%, black) 100%);
+  box-shadow: 0 0 6px var(--c), 0 0 18px color-mix(in srgb, var(--c) 60%, transparent), inset 0 0 6px rgba(255,255,255,.65);
+}
+html[data-theme="neon"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg, #barbg, .panel, .sheet) { border-color: #00f0ff55 !important; }
+html[data-theme="neon"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light, .btn.dark) { box-shadow: 0 0 10px rgba(0,240,255,.35) !important; }
+html[data-theme="neon"] .card.yellow .stat span { color: var(--ink-soft); }
+html[data-theme="neon"] #shadow { background: radial-gradient(closest-side, rgba(0,240,255,.33), transparent); }
+
+/* ======================================================================
+   PLASMA — slow swirling energy
+   ====================================================================== */
+html[data-theme="plasma"] {
+  color-scheme: dark;
+  --bg: #12002b; --chrome: rgba(30,0,70,.55); --ink: #f6ecff; --ink-soft: #c3a8ee; --on-ink: #1a0038;
+  --surface: rgba(255,255,255,.1); --surface-2: rgba(255,255,255,.14); --body: #16022f;
+  --c-white: rgba(255,255,255,.1); --c-yellow: rgba(255,200,0,.22); --c-black: rgba(14,0,36,.62);
+  --c-blue: rgba(90,100,255,.32); --c-green: rgba(0,255,200,.2); --on-black: #f6ecff; --on-blue: #fff; --on-green: #fff;
+  --accent: #ff5df2; --on-accent: #1a0038; --serif: var(--sans); --dw: 800;
+  --card-r: 24px; --card-bw: 1px; --card-shadow: 0 0 34px rgba(190,70,255,.35), inset 0 0 0 1px rgba(255,255,255,.25);
+  --face-r: 12%; --st-r: 20%; --st-in: 8%;
+}
+html[data-theme="plasma"], html[data-theme="plasma"] body {
+  background: linear-gradient(120deg, #12002b, #43097f, #0b2f86, #12002b) 0 0 / 300% 300%; animation: plasmaBg 16s ease infinite;
+}
+html[data-theme="plasma"] .sticker {
+  background: radial-gradient(circle at 28% 22%, rgba(255,255,255,.85), transparent 34%),
+              conic-gradient(from var(--pa), var(--c), color-mix(in srgb, var(--c) 35%, #ff3df0), color-mix(in srgb, var(--c) 35%, #2de2ff), var(--c));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--c) 70%, transparent), inset 0 0 12px rgba(255,255,255,.35);
+  animation: plasmaSpin 6s linear infinite;
+}
+html[data-theme="plasma"] :is(.card, .panel, #barbg, .sheet) { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+html[data-theme="plasma"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg) { border-color: rgba(255,255,255,.35) !important; }
+html[data-theme="plasma"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light) { box-shadow: 0 0 14px rgba(190,70,255,.35) !important; }
+html[data-theme="plasma"] .card.yellow .stat span { color: var(--ink-soft); }
+html[data-theme="plasma"] #shadow { background: radial-gradient(closest-side, rgba(200,80,255,.4), transparent); }
+
+/* ======================================================================
+   HALFTONE — pop-art print: dots, black ink, hard shadows
+   ====================================================================== */
+html[data-theme="halftone"] {
+  --bg: #f4ecd8; --chrome: #fbf6e8; --ink: #111; --ink-soft: #4a4538; --surface: #fffdf5; --surface-2: #fffdf5; --body: #111;
+  --c-white: #fffdf5; --c-yellow: #ffd84a; --c-black: #111; --c-blue: #2f6fe4; --c-green: #20a66b; --accent: #ffd84a;
+  --card-r: 8px; --card-bw: 3px; --card-shadow: 7px 7px 0 #111; --face-r: 6%; --st-r: 6%; --st-in: 6%; --dw: 400;
+}
+html[data-theme="halftone"], html[data-theme="halftone"] body { background: radial-gradient(#d9ccaa 1.3px, transparent 1.6px) 0 0 / 11px 11px, #f4ecd8; }
+html[data-theme="halftone"] .sticker {
+  background: radial-gradient(circle, var(--c) 0 40%, transparent 44%) 0 0 / 9px 9px, color-mix(in srgb, var(--c) 24%, #fffdf5);
+  box-shadow: inset 0 0 0 2px #111;
+}
+html[data-theme="halftone"] .card { background-image: radial-gradient(rgba(0,0,0,.2) 1.2px, transparent 1.6px); background-size: 8px 8px; }
+html[data-theme="halftone"] .card.black { background-image: radial-gradient(rgba(255,255,255,.14) 1.2px, transparent 1.6px); }
+
+/* ======================================================================
+   CLAY — soft, puffy, pastel
+   ====================================================================== */
+html[data-theme="clay"] {
+  --bg: #efe7f7; --chrome: #f6f0fb; --ink: #4a3b5c; --ink-soft: #7d6d90; --surface: #f6f0fb; --surface-2: #f6f0fb; --body: #cbbde0;
+  --c-white: #fdf9ff; --c-yellow: #ffe08a; --c-black: #6b5b8a; --c-blue: #a9cbff; --c-green: #aee8c8;
+  --on-black: #fff; --on-blue: #243a66; --on-green: #1d4a35; --accent: #ffcf5c;
+  --card-r: 30px; --card-bw: 0px; --face-r: 26%; --st-r: 32%; --st-in: 8%; --dw: 400;
+  --card-shadow: 10px 10px 22px rgba(120,90,160,.28), -8px -8px 18px rgba(255,255,255,.9), inset 0 -6px 10px rgba(0,0,0,.08), inset 0 6px 10px rgba(255,255,255,.7);
+}
+html[data-theme="clay"], html[data-theme="clay"] body { background: radial-gradient(60% 50% at 20% 20%, #fbe4ef, transparent 60%), radial-gradient(50% 50% at 85% 75%, #dcebff, transparent 60%), #efe7f7; }
+html[data-theme="clay"] .face { box-shadow: inset 0 -5px 9px rgba(0,0,0,.12), inset 0 5px 9px rgba(255,255,255,.5); }
+html[data-theme="clay"] .sticker {
+  background: color-mix(in srgb, var(--c) 72%, white);
+  box-shadow: inset 0 -8px 12px rgba(0,0,0,.18), inset 0 7px 12px rgba(255,255,255,.6), 0 3px 7px rgba(80,50,120,.28);
+}
+html[data-theme="clay"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg, .moveform input, .sheet) { border-color: transparent !important; }
+html[data-theme="clay"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light, .seg) {
+  box-shadow: 5px 5px 11px rgba(120,90,160,.26), -4px -4px 9px rgba(255,255,255,.9), inset 0 -3px 5px rgba(0,0,0,.06) !important;
+}
+html[data-theme="clay"] :is(.round, .btn, .mini, .pat, .mstat, .theme-tile, .scramble) { border-radius: 18px; }
+html[data-theme="clay"] .round { border-radius: 50%; }
+html[data-theme="clay"] .sheet { box-shadow: 14px 14px 30px rgba(120,90,160,.3), -8px -8px 20px rgba(255,255,255,.9); border-radius: 34px; }
+html[data-theme="clay"] #shadow { background: radial-gradient(closest-side, rgba(110,80,150,.3), transparent); }
+
+/* ======================================================================
+   FUR — warm, fuzzy, hairy
+   ====================================================================== */
+html[data-theme="fur"] {
+  --bg: #e7cfae; --chrome: #f1e0c6; --ink: #4a2f1d; --ink-soft: #7a5a42; --on-ink: #fff4e3; --surface: #f6e8d2; --surface-2: #f6e8d2; --body: #3b2616;
+  --c-white: #fbf1e0; --c-yellow: #f2b84b; --c-black: #4a2f1d; --c-blue: #6aa0b8; --c-green: #8aab6b;
+  --on-black: #fbf1e0; --on-blue: #fff; --on-green: #fff; --accent: #f2b84b; --card-r: 34px; --card-bw: 0px;
+  --face-r: 22%; --st-r: 30%; --st-in: 8%; --dw: 400;
+  --card-shadow: 0 0 0 5px var(--fuzz, #f6e8d2), 0 0 16px 9px color-mix(in srgb, var(--fuzz, #f6e8d2) 65%, transparent), 0 10px 20px rgba(60,30,10,.3);
+}
+html[data-theme="fur"] .card.white { --fuzz: var(--c-white); } html[data-theme="fur"] .card.yellow { --fuzz: var(--c-yellow); }
+html[data-theme="fur"] .card.black { --fuzz: var(--c-black); } html[data-theme="fur"] .card.blue { --fuzz: var(--c-blue); }
+html[data-theme="fur"] .card.green { --fuzz: var(--c-green); }
+html[data-theme="fur"], html[data-theme="fur"] body {
+  background: repeating-linear-gradient(98deg, rgba(255,255,255,.10) 0 1px, transparent 1px 4px), repeating-linear-gradient(78deg, rgba(90,50,20,.10) 0 1px, transparent 1px 5px), #e7cfae;
+}
+html[data-theme="fur"] .card, html[data-theme="fur"] .panel {
+  background-image: repeating-linear-gradient(95deg, rgba(255,255,255,.16) 0 1px, transparent 1px 3px), repeating-linear-gradient(75deg, rgba(0,0,0,.09) 0 1px, transparent 1px 4px);
+}
+html[data-theme="fur"] .face { box-shadow: 0 0 4px 1px rgba(59,38,22,.6); }
+html[data-theme="fur"] .sticker {
+  background: repeating-linear-gradient(100deg, rgba(255,255,255,.24) 0 1px, transparent 1px 3px), repeating-linear-gradient(80deg, rgba(0,0,0,.15) 0 1px, transparent 1px 4px),
+              radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--c) 82%, white), var(--c) 68%, color-mix(in srgb, var(--c) 72%, black));
+  box-shadow: 0 0 5px 3px color-mix(in srgb, var(--c) 78%, transparent), inset 0 0 9px rgba(0,0,0,.28);
+}
+html[data-theme="fur"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg, .sheet) { border-color: transparent !important; }
+html[data-theme="fur"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light, .seg) { box-shadow: 0 0 0 3px #f6e8d2, 0 0 9px 4px rgba(246,232,210,.8), 0 5px 10px rgba(60,30,10,.25) !important; }
+html[data-theme="fur"] #shadow { background: radial-gradient(closest-side, rgba(70,40,15,.38), transparent); }
+
+/* ======================================================================
+   METAL — brushed steel
+   ====================================================================== */
+html[data-theme="metal"] {
+  color-scheme: dark;
+  --bg: #14181f; --chrome: #1d232c; --ink: #e3e9f2; --ink-soft: #9aa6b8; --on-ink: #14181f; --surface: #272e39; --surface-2: #2e3643;
+  --body: linear-gradient(145deg, #4a525f, #1b2028);
+  --c-white: linear-gradient(145deg, #eef2f8, #aeb8c6 45%, #dde4ee 62%, #8f9aab);
+  --c-yellow: linear-gradient(145deg, #ffeaa5, #c9a227 50%, #f4d96e);
+  --c-black: linear-gradient(145deg, #3c4452, #1a1e25);
+  --c-blue: linear-gradient(145deg, #a2c0ee, #3d6bb5 55%, #86aae0);
+  --c-green: linear-gradient(145deg, #a9e6c2, #2f8f5f 55%, #86d3a6);
+  --on-black: #e3e9f2; --on-blue: #0b1522; --on-green: #07180f; --accent: #e0b84a; --on-accent: #1a1405;
+  --serif: var(--sans); --dw: 800; --card-r: 14px; --card-bw: 1px;
+  --card-shadow: 0 8px 16px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -2px 0 rgba(0,0,0,.35);
+  --face-r: 7%; --st-r: 10%; --st-in: 7%;
+}
+html[data-theme="metal"], html[data-theme="metal"] body {
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px), linear-gradient(160deg, #2b313b, #14181f 60%, #1f252e);
+}
+html[data-theme="metal"] .card { border-color: #7d8898; }
+html[data-theme="metal"] :is(.card.white, .card.yellow, .card.blue, .card.green) { color: #10151c; }
+html[data-theme="metal"] :is(.card.white, .card.yellow, .card.blue, .card.green) .stat span { color: #2b3340; }
+html[data-theme="metal"] .sticker {
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 1px, transparent 1px 3px),
+              linear-gradient(135deg, color-mix(in srgb, var(--c) 45%, white) 0%, var(--c) 32%, color-mix(in srgb, var(--c) 55%, black) 62%, color-mix(in srgb, var(--c) 68%, white) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 0 rgba(0,0,0,.35), inset 0 0 0 1px rgba(0,0,0,.25);
+}
+html[data-theme="metal"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg) { border-color: #7d8898 !important; }
+html[data-theme="metal"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light) { box-shadow: 0 3px 6px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.35) !important; }
+html[data-theme="metal"] #shadow { background: radial-gradient(closest-side, rgba(0,0,0,.6), transparent); }
+
+/* ======================================================================
+   SQUISHY — gummy jelly (JS adds the squash, overshoot and wobble when you twist)
+   ====================================================================== */
+html[data-theme="jelly"] {
+  --bg: #bfeaf7; --chrome: rgba(255,255,255,.5); --ink: #14506b; --ink-soft: #3c7f99; --surface: rgba(255,255,255,.72); --surface-2: rgba(255,255,255,.85);
+  --body: #7fd0ee; --c-white: rgba(255,255,255,.78); --c-yellow: #ffe47a; --c-black: #1f6f93; --c-blue: #74b9ff; --c-green: #7be3b6;
+  --on-black: #fff; --on-blue: #0b3a63; --on-green: #0b4a33; --accent: #ffd84a; --card-r: 36px; --card-bw: 0px;
+  --face-r: 32%; --st-r: 36%; --st-in: 6%; --dw: 400;
+  --card-shadow: inset 0 9px 14px rgba(255,255,255,.75), inset 0 -9px 14px rgba(0,60,100,.2), 0 12px 22px rgba(0,90,140,.28);
+}
+html[data-theme="jelly"], html[data-theme="jelly"] body {
+  background: radial-gradient(circle at 18% 22%, rgba(255,255,255,.7) 0 3%, transparent 3.5%), radial-gradient(circle at 80% 30%, rgba(255,255,255,.6) 0 2%, transparent 2.5%),
+              radial-gradient(circle at 70% 80%, rgba(255,255,255,.6) 0 4%, transparent 4.5%), radial-gradient(circle at 30% 75%, rgba(255,255,255,.55) 0 2.5%, transparent 3%),
+              linear-gradient(170deg, #d8f5ff, #8fd6f2 60%, #6bc3e8);
+}
+html[data-theme="jelly"] .face { box-shadow: inset 0 0 10px rgba(255,255,255,.5); }
+html[data-theme="jelly"] .sticker {
+  background: radial-gradient(ellipse at 30% 22%, rgba(255,255,255,.95) 0 9%, transparent 26%),
+              radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--c) 70%, white), var(--c) 62%, color-mix(in srgb, var(--c) 72%, black));
+  box-shadow: inset 0 -7px 11px rgba(0,0,0,.18), inset 0 0 11px rgba(255,255,255,.5), 0 3px 8px rgba(0,80,120,.35);
+}
+html[data-theme="jelly"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .seg, .sheet, .moveform input) { border-color: transparent !important; }
+html[data-theme="jelly"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light, .seg) {
+  box-shadow: inset 0 5px 8px rgba(255,255,255,.8), inset 0 -5px 8px rgba(0,70,110,.18), 0 5px 10px rgba(0,90,140,.25) !important;
+}
+html[data-theme="jelly"] :is(.round, .btn, .mini, .pat, .mstat, .theme-tile, .scramble) { border-radius: 20px; }
+html[data-theme="jelly"] .round { border-radius: 50%; }
+html[data-theme="jelly"] .sheet { border-radius: 38px; box-shadow: inset 0 9px 14px rgba(255,255,255,.75), 0 18px 30px rgba(0,90,140,.3); }
+html[data-theme="jelly"] #shadow { background: radial-gradient(closest-side, rgba(0,90,140,.35), transparent); }
+
+/* ======================================================================
+   PIXEL — 8-bit
+   ====================================================================== */
+html[data-theme="pixel"] {
+  color-scheme: dark;
+  --bg: #1a1c2c; --chrome: #262a44; --ink: #f4f4f4; --ink-soft: #a7b0d0; --on-ink: #1a1c2c; --surface: #333c57; --surface-2: #41497a; --body: #0e0f1a;
+  --c-white: #333c57; --c-yellow: #ffcd75; --c-black: #0e0f1a; --c-blue: #3b5dc9; --c-green: #38b764;
+  --on-black: #f4f4f4; --on-blue: #fff; --on-green: #0e0f1a; --accent: #ffcd75; --on-accent: #1a1c2c;
+  --serif: 'Press Start 2P', ui-monospace, monospace; --sans: 'Press Start 2P', ui-monospace, monospace; --dw: 400;
+  --card-r: 0px; --card-bw: 4px; --card-shadow: 0 -4px 0 0 #000, 0 4px 0 0 #000, -4px 0 0 0 #000, 4px 0 0 0 #000;
+  --face-r: 0%; --st-r: 0%; --st-in: 8%;
+}
+html[data-theme="pixel"], html[data-theme="pixel"] body {
+  font-size: 11px; line-height: 1.6;
+  background: linear-gradient(rgba(255,255,255,.04) 2px, transparent 2px) 0 0 / 16px 16px, linear-gradient(90deg, rgba(255,255,255,.04) 2px, transparent 2px) 0 0 / 16px 16px, #1a1c2c;
+}
+html[data-theme="pixel"] .num { font-size: 22px; } html[data-theme="pixel"] .puzzle h2 { font-size: 22px; }
+html[data-theme="pixel"] .brand-name { font-size: 16px; } html[data-theme="pixel"] .mstat b { font-size: 16px; }
+html[data-theme="pixel"] .sheet h2 { font-size: 22px; } html[data-theme="pixel"] .sheet .big { font-size: 34px; }
+html[data-theme="pixel"] .tool-head h3 { font-size: 16px; } html[data-theme="pixel"] .eyebrow { letter-spacing: 0; }
+html[data-theme="pixel"] :is(.stat span, .detail, .helper, .speed, .tool-note, .tool-info, .pat span, .theme-tile span, .mstat span) { font-size: 9px; }
+html[data-theme="pixel"] :is(.mini, .btn, .scramble, .seg button, .pat b, .theme-tile b, .mv, .chip, #toast, .moveform input) { font-size: 10px; }
+html[data-theme="pixel"] .sticker {
+  clip-path: polygon(0 14%, 14% 14%, 14% 0, 86% 0, 86% 14%, 100% 14%, 100% 86%, 86% 86%, 86% 100%, 14% 100%, 14% 86%, 0 86%);
+  box-shadow: inset -5px -5px 0 rgba(0,0,0,.33), inset 5px 5px 0 rgba(255,255,255,.38);
+}
+html[data-theme="pixel"] .face { box-shadow: inset 0 0 0 2px #000; }
+html[data-theme="pixel"] :is(.card, .mini, .round, .btn, .scramble, .seg, .seg button, .pat, .mstat, .mv, .chip, #toast, .sheet, .logo, .logo i, .bar, .bar i, .moveform input, .theme-tile, .theme-tile i, .dot) { border-radius: 0 !important; }
+html[data-theme="pixel"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn, .scramble, .moveform input) { border-color: #f4f4f4 !important; }
+html[data-theme="pixel"] :is(.mini, .round, .pat, .mstat, .mv, .theme-tile, .btn.light, .btn.dark) { box-shadow: 4px 4px 0 #000 !important; }
+html[data-theme="pixel"] .sheet { box-shadow: 0 -4px 0 0 #000, 0 4px 0 0 #000, -4px 0 0 0 #000, 4px 0 0 0 #000; }
+html[data-theme="pixel"] #shadow { background: radial-gradient(closest-side, rgba(0,0,0,.5), transparent); filter: none; }
+
+/* the wide Style button keeps its pill shape in every theme */
+html[data-theme] .round.wide { border-radius: 999px; }
+html[data-theme="pixel"] .round.wide { border-radius: 0 !important; }
+html[data-theme="pixel"] .tools .minis { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 520px) { html[data-theme] .round.wide { border-radius: 50%; } html[data-theme="pixel"] .round.wide { border-radius: 0 !important; } }
